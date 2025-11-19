@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catherine's Catering</title>
+    
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Carga de la fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Carga de Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Aplicar la fuente Inter a todo el cuerpo */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Estilo para las vistas (páginas) ocultas */
+        .page-view {
+            display: none;
+        }
+        
+        /* Estilo para la pestaña activa en el dashboard de gerente */
+        .tab-active {
+            border-bottom-color: #4f46e5; /* indigo-600 */
+            color: #4f46e5; /* indigo-600 */
+            font-weight: 600;
+        }
+
+        /* --- Nuevos estilos para interactividad --- */
+        
+        /* Clase base para botones para transiciones */
+        .btn {
+             transition: all 0.2s ease-in-out;
+        }
+
+        /* Transición suave para enlaces, tarjetas y pestañas */
+        .nav-link, .interactive-card, .manager-tab {
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Efecto de "levantar" en tarjetas interactivas */
+        .interactive-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        /* Transición para el modal (fade-in y scale-up) */
+        #modal-notification {
+            transition: opacity 0.2s ease-in-out;
+        }
+        /* Contenido del modal */
+        #modal-content {
+        .step:last-child .step-line {
+            display: none;
+        }
+        
+        /* Estilo para campos requeridos */
+        .required-label::after {
+            content: ' *';
+            color: #ef4444; /* red-500 */
+        }
+        /* --- Fin de nuevos estilos --- */
+    </style>
+</head>
+<body class="h-full">
+
+    <div id="app" class="min-h-full">
+
+        <!-- Barra de Navegación Principal -->
+        <nav class="bg-white shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-utensils text-indigo-600 text-xl mr-2"></i>
+                        <span class="font-bold text-xl text-gray-800">Catherine's Catering</span>
+                    </div>
+                    <div class="flex">
+                        <!-- Navegación Pública -->
+                        <div id="nav-public" class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                            <a href="#platillos" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Platillos
+                            </a>
+                            <a href="#salones" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Salones
+                            </a>
+                            <a href="#contacto" class="nav-link border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Contacto
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <button id="btn-login-nav" class="btn bg-indigo-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 hover:-translate-y-0.5">
+                            <i class="fa-solid fa-right-to-bracket mr-1"></i> Iniciar Sesión
+                        </button>
+                        <span id="user-greeting" class="hidden text-gray-700 font-medium mr-4"></span>
+                        <button id="btn-logout-nav" class="hidden btn bg-red-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 hover:-translate-y-0.5">
+                            <i class="fa-solid fa-right-from-bracket mr-1"></i> Salir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenedor Principal de la Página -->
+        <div class="py-10">
+            <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+                <h1 id="page-title" class="text-3xl font-bold leading-tight text-gray-900">Bienvenido</h1>
+            </header>
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- === VISTA PÚBLICA === -->
+                <div id="view-public" class="page-view space-y-12">
+                    
+                    <!-- Sección Hero -->
+                    <section class="bg-white rounded-lg shadow p-8 text-center">
+                        
+                        <h2 class="text-3xl font-bold text-gray-900">El Sabor de la Excelencia</h2>
+                        <p class="mt-4 text-lg text-gray-600">Deje que nuestro equipo de expertos se encargue de su evento. Calidad y servicio que puede saborear.</p>
+                    </section>
+
+                    <!-- Sección Platillos (Req 1) -->
+                    <section id="platillos">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Nuestros Platillos</h2>
+                        <div id="platillos-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Los platillos se insertarán aquí por JS -->
+                        </div>
+                    </section>
+                    
+                    <!-- Sección Salones (Req 1) -->
+                    <section id="salones">
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Salones en Convenio</h2>
+                        <div id="salones-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Los salones se insertarán aquí por JS -->
+                        </div>
+                    </section>
+
+                    <!-- Sección Contacto (Req 2) -->
+                    <section id="contacto" class="bg-indigo-700 rounded-lg shadow-lg overflow-hidden">
+                        <div class="relative">
+                            <!-- Fondo decorativo (opcional, pero añade elegancia) -->
+                            <div class="absolute inset-0">
+                                <img class="w-full h-full object-cover opacity-20" src="https://images.unsplash.com/photo-1551882487-0d588b8d41b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Mesa de banquete"
+                                onerror="this.onerror=null;this.src='https://placehold.co/1200x600/4f46e5/ffffff?text=Evento+Elegante&font=inter';">
+                            </div>
+
+                            <div class="relative max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                                    <!-- Columna de Texto -->
+                                    <div class="text-white">
+                                        <h2 class="text-3xl font-bold sm:text-4xl">
+                                            ¿Listo para planear su evento?
+                                        </h2>
+                                        <p class="mt-4 text-lg text-indigo-100">
+                                            Llene el formulario y uno de nuestros gerentes expertos se pondrá en contacto con usted para crear una experiencia inolvidable.
+                                        </p>
+                                        <div class="mt-8 space-y-4">
+                                            <p class="flex items-center text-indigo-100">
+                                                <i class="fa-solid fa-phone fa-fw mr-3 text-white"></i>
+                                                <span>(555) 123-4567</span>
+                                            </p>
+                                            <p class="flex items-center text-indigo-100">
+                                                <i class="fa-solid fa-envelope fa-fw mr-3 text-white"></i>
+                                                <span>ventas@catherinecatering.com</span>
+                                            </p>
+                                            <p class="flex items-center text-indigo-100">
+                                                <i class="fa-solid fa-clock fa-fw mr-3 text-white"></i>
+                                                <span>Lunes a Viernes, 9:00 AM - 6:00 PM</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Columna de Formulario -->
+                                    <div class="bg-white rounded-lg shadow-xl p-8">
+                                        <h3 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Solicite una Cotización</h3>
+                                        
+                                        <!-- Indicador de Pasos -->
+                                        <div id="form-steps-indicator" class="mb-6">
+                                            <div class="flex items-center">
+                                                <div id="step-1-indicator" class="step is-active flex items-center flex-1">
+                                                    <div class="step-circle flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-bold text-sm mr-3">1</div>
+                                                    <span class="text-sm font-medium text-indigo-600">Tus Datos</span>
+                                                </div>
+                                                <div class="flex-1 h-0.5 bg-gray-200 mx-4"></div>
+                                                <div id="step-2-indicator" class="step flex items-center flex-1 opacity-50">
+                                                    <div class="step-circle flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 text-gray-500 font-bold text-sm mr-3">2</div>
+                                                    <span class="text-sm font-medium text-gray-500">Tu Evento</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <form id="form-solicitud">
+                                            <!-- Paso 1: Datos del Cliente -->
+                                            <div id="form-step-1" class="form-step space-y-4">
+                                                <div>
+                                                    <label for="solicitud-nombre" class="required-label block text-sm font-medium text-gray-700">Nombre Completo</label>
+                                                    <input type="text" id="solicitud-nombre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                                                    <p id="error-nombre" class="hidden text-xs text-red-500 mt-1">El nombre es obligatorio.</p>
+                                                </div>
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label for="solicitud-email" class="required-label block text-sm font-medium text-gray-700">Email</label>
+                                                        <input type="email" id="solicitud-email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                                                        <p id="error-email" class="hidden text-xs text-red-500 mt-1">El email es obligatorio y debe ser válido.</p>
+                                                    </div>
+                                                    <div>
+                                                        <label for="solicitud-telefono" class="block text-sm font-medium text-gray-700">Teléfono</label>
+                                                        <input type="tel" id="solicitud-telefono" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Paso 2: Datos del Evento -->
+                                            <div id="form-step-2" class="form-step space-y-4" style="display: none;">
+                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label for="solicitud-fecha" class="block text-sm font-medium text-gray-700">Fecha Estimada</label>
+                                                        <input type="date" id="solicitud-fecha" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+                                                    <div>
+                                                        <label for="solicitud-invitados" class="block text-sm font-medium text-gray-700"># Invitados</label>
+                                                        <input type="number" id="solicitud-invitados" placeholder="Ej: 150" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label for="solicitud-detalles" class="block text-sm font-medium text-gray-700">Detalles del Evento</label>
+                                                    <textarea id="solicitud-detalles" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Tipo de evento, menú de interés, etc..."></textarea>
+                                                </div>
+                                            </div>
+
+                                            <!-- Navegación del Formulario -->
+                                            <div id="form-nav" class="flex justify-between items-center pt-6">
+                                                <button type="button" id="btn-form-prev" class="btn text-sm font-medium text-gray-600 hover:text-indigo-600 disabled:opacity-50" disabled>
+                                                    <i class="fa-solid fa-arrow-left mr-1"></i> Anterior
+                                                </button>
+                                                
+                                                <button type="button" id="btn-form-next" class="btn inline-flex justify-center py-2 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    Siguiente <i class="fa-solid fa-arrow-right ml-2"></i>
+                                                </button>
+                                                
+                                                <button type="submit" id="btn-form-submit" class="btn hidden w-full inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                    Enviar Solicitud
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- === VISTA LOGIN === -->
+                <div id="view-login" class="page-view">
+                    <div class="max-w-md mx-auto bg-white rounded-lg shadow p-8">
+                        <form id="form-login" class="space-y-6">
+                            <div>
+                                <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <div class="mt-1">
+                                    <input id="login-email" name="email" type="email" autocomplete="email" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" value="cliente1@mail.com">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="login-password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                                <div class="mt-1">
+                                    <input id="login-password" name="password" type="password" autocomplete="current-password" required class="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" value="hash_c1">
+                                </div>
+                            </div>
+                            <div id="login-error" class="hidden text-sm text-red-600">Email o contraseña incorrectos.</div>
+                            <div>
+                                <button type="submit" class="btn flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    Entrar
+                                </button>
+                            </div>
+                        </form>
+                        <hr class="my-6">
+                        <p class="text-sm text-gray-600">Datos de prueba:</p>
+                        <ul class="text-xs list-disc list-inside text-gray-500">
+                            <li>Cliente: <span class="font-mono">cliente1@mail.com</span> / <span class="font-mono">hash_c1</span></li>
+                            <li>Gerente: <span class="font-mono">gerente1@catering.com</span> / <span class="font-mono">hash_g1</span></li>
+                            <li>Admin: <span class="font-mono">admin@catering.com</span> / <span class="font-mono">hash_admin</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- === VISTA DASHBOARD CLIENTE === -->
+                <div id="view-client-dashboard" class="page-view space-y-8">
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Mis Proyectos Activos</h2>
+                        <div id="client-projects-list" class="space-y-6">
+                            <!-- Los proyectos del cliente se insertarán aquí por JS -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- === VISTA DASHBOARD GERENTE === -->
+                <div id="view-manager-dashboard" class="page-view">
+                    <!-- Pestañas de Navegación del Gerente -->
+                    <div class="border-b border-gray-200 mb-6">
+                        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                            <button data-tab="manager-tab-projects" class="manager-tab tab-active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fa-solid fa-calendar-days mr-1"></i> Proyectos
+                            </button>
+                            <button data-tab="manager-tab-new-dish" class="manager-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fa-solid fa-plate-wheat mr-1"></i> Crear Platillo
+                            </button>
+                            <button data-tab="manager-tab-reports" class="manager-tab border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fa-solid fa-chart-line mr-1"></i> Reportes
+                            </button>
+                            <!-- Pestaña solo para Admin-Gerente -->
+                            <button id="tab-admin-gerentes" data-tab="manager-tab-admin" class="manager-tab hidden border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                                <i class="fa-solid fa-users-cog mr-1"></i> Administrar Gerentes
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Contenido de las Pestañas -->
+                    
+                    <!-- Pestaña: Proyectos (Gerente) -->
+                    <div id="manager-tab-projects" class="manager-tab-content">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Gestión de Proyectos</h3>
+                        <div class="bg-white shadow rounded-lg overflow-hidden">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Evento</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invitados</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estatus</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manager-projects-table" class="bg-white divide-y divide-gray-200">
+                                    <!-- Filas de proyectos se insertarán aquí por JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Pestaña: Crear Platillo (Gerente) (Req 3) -->
+                    <div id="manager-tab-new-dish" class="manager-tab-content" style="display: none;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Agregar Nuevo Platillo</h3>
+                         <form id="form-nuevo-platillo" class="max-w-xl mx-auto bg-white rounded-lg shadow p-8 space-y-4">
+                            <div>
+                                <label for="dish-nombre" class="block text-sm font-medium text-gray-700">Nombre del Platillo</label>
+                                <input type="text" id="dish-nombre" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                            </div>
+                            <div>
+                                <label for="dish-precio" class="block text-sm font-medium text-gray-700">Precio por Persona</label>
+                                <input type="number" id="dish-precio" step="0.01" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" required>
+                            </div>
+                            <div>
+                                <label for="dish-tipo" class="block text-sm font-medium text-gray-700">Tipo</label>
+                                <select id="dish-tipo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                    <option value="entrada">Entrada</option>
+                                    <option value="plato_fuerte">Plato Fuerte</option>
+                                    <option value="postre">Postre</option>
+                                    <option value="bebida">Bebida</option>
+                                    <option value="complemento">Complemento</option>
+                                    <option value="vegetariano">Vegetariano</option>
+                                    <option value="bajo_en_calorias">Bajo en Calorías</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="dish-desc" class="block text-sm font-medium text-gray-700">Descripción</label>
+                                <textarea id="dish-desc" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                            </div>
+                             <div>
+                                <label for="dish-instrucciones" class="block text-sm font-medium text-gray-700">Instrucciones de Preparación (Interno)</label>
+                                <textarea id="dish-instrucciones" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                            </div>
+                            <!-- (Simplicación: Los ingredientes se agregarían en un paso posterior o un modal) -->
+                            <div class="text-right">
+                                <button type="submit" class="btn inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Guardar Platillo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Pestaña: Reportes (Gerente) (Req 4, 5, 7) -->
+                    <div id="manager-tab-reports" class="manager-tab-content" style="display: none;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Reportes de Operación</h3>
+                        <div class="space-y-6">
+                            <!-- Reporte de Ingredientes (Req 4) -->
+                            <div class="bg-white shadow rounded-lg p-6">
+                                <h4 class="text-lg font-medium text-gray-900 mb-3">Reporte de Ingredientes (Req. 4)</h4>
+                                <p class="text-sm text-gray-600 mb-3">Ingredientes necesarios para eventos en un rango de fechas.</p>
+                                <div class="flex items-center space-x-2">
+                                    <input type="date" id="report-ing-start" class="block w-48 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="2025-11-17">
+                                    <span class="text-gray-500">al</span>
+                                    <input type="date" id="report-ing-end" class="block w-48 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="2025-11-23">
+                                    <button id="btn-report-ing" class="btn py-2 px-4 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5">Generar</button>
+                                </div>
+                                <div id="report-ing-result" class="mt-4 hidden"></div>
+                            </div>
+                            
+                            <!-- Reporte Eventos No Finiquitados (Req 5) -->
+                            <div class="bg-white shadow rounded-lg p-6">
+                                <h4 class="text-lg font-medium text-gray-900 mb-3">Eventos No Finiquitados (Req. 5)</h4>
+                                <p class="text-sm text-gray-600 mb-3">Eventos a 3 semanas o menos que no han sido liquidados (estatus "confirmado").</p>
+                                <button id="btn-report-cobranza" class="btn py-2 px-4 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5">Generar Reporte de Cobranza</button>
+                                <div id="report-cobranza-result" class="mt-4 hidden"></div>
+                            </div>
+
+                            <!-- Reporte Platillos Populares (Req 7) -->
+                            <div class="bg-white shadow rounded-lg p-6">
+                                <h4 class="text-lg font-medium text-gray-900 mb-3">Platillos Populares (Req. 7)</h4>
+                                <p class="text-sm text-gray-600 mb-3">Platillos más y menos pedidos en eventos confirmados y realizados.</p>
+                                <button id="btn-report-pop" class="btn py-2 px-4 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5">Generar Reporte de Popularidad</button>
+                                <div id="report-pop-result" class="mt-4 hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pestaña: Administrar Gerentes (Admin) (Req 3) -->
+                    <div id="manager-tab-admin" class="manager-tab-content" style="display: none;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Administrar Gerentes</h3>
+                        <div class="bg-white shadow rounded-lg overflow-hidden">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estatus Actual</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cambiar Estatus</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manager-admin-table" class="bg-white divide-y divide-gray-200">
+                                    <!-- Filas de gerentes se insertarán aquí por JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- Modal simple para notificaciones -->
+    <div id="modal-notification" class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4 opacity-0">
+        <div id="modal-content" class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-lg font-medium text-gray-900">Notificación</h3>
+                <button id="modal-close" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+            <p id="modal-message" class="text-sm text-gray-600"></p>
+            <div class="mt-5 text-right">
+                 <button id="modal-ok" class="btn py-2 px-4 rounded-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // -----------------------------------------------------------------
+        // SIMULACIÓN DE BASE DE DATOS (Datos de seed.sql)
+        // -----------------------------------------------------------------
+        const db = {
+            usuarios: [
+                { usuario_id: 1, email: 'admin@catering.com', password_hash: 'hash_admin', tipo_usuario: 'admin_gerente', nombre: 'Catherine', apellido: 'Dueña' },
+                { usuario_id: 2, email: 'gerente1@catering.com', password_hash: 'hash_g1', tipo_usuario: 'gerente', nombre: 'Ana', apellido: 'Torres' },
+                { usuario_id: 3, email: 'gerente2@catering.com', password_hash: 'hash_g2', tipo_usuario: 'gerente', nombre: 'Luis', apellido: 'Mora' },
+                { usuario_id: 4, email: 'gerente3_inactivo@catering.com', password_hash: 'hash_g3', tipo_usuario: 'gerente', nombre: 'Pedro', apellido: 'Páramo' },
+                { usuario_id: 5, email: 'cliente1@mail.com', password_hash: 'hash_c1', tipo_usuario: 'cliente', nombre: 'Carlos', apellido: 'Sanchez' },
+                { usuario_id: 6, email: 'cliente2@mail.com', password_hash: 'hash_c2', tipo_usuario: 'cliente', nombre: 'Brenda', apellido: 'Gomez' },
+                { usuario_id: 7, email: 'cliente3@mail.com', password_hash: 'hash_c3', tipo_usuario: 'cliente', nombre: 'Empresa', apellido: 'XYZ' },
+                { usuario_id: 8, email: 'cliente4@mail.com', password_hash: 'hash_c4', tipo_usuario: 'cliente', nombre: 'Familia', apellido: 'Perez' },
+                { usuario_id: 9, email: 'cliente5@mail.com', password_hash: 'hash_c5', tipo_usuario: 'cliente', nombre: 'Juan', apellido: 'Lopez' }
+            ],
+            clientes: [
+                { cliente_id: 1, usuario_id: 5, direccion: 'Fact. Calle 123' },
+                { cliente_id: 2, usuario_id: 6, direccion: 'Fact. Av. Siempre Viva 456' },
+                { cliente_id: 3, usuario_id: 7, direccion: 'Fact. Corporativo 789' },
+                { cliente_id: 4, usuario_id: 8, direccion: 'Fact. Calle Falsa 123' },
+                { cliente_id: 5, usuario_id: 9, direccion: 'Fact. Blvd. Principal 321' }
+            ],
+            gerentes: [
+                { gerente_id: 1, usuario_id: 1, estatus: 'activo' },
+                { gerente_id: 2, usuario_id: 2, estatus: 'activo' },
+                { gerente_id: 3, usuario_id: 3, estatus: 'activo' },
+                { gerente_id: 4, usuario_id: 4, estatus: 'inactivo' }
+            ],
+            salones: [
+                { salon_id: 1, nombre: 'Salón Imperial', costo_renta: 50000.00, capacidad_maxima: 300 },
+                { salon_id: 2, nombre: 'Jardín Las Fuentes', costo_renta: 35000.00, capacidad_maxima: 150 },
+                { salon_id: 3, nombre: 'Terraza Bellavista', costo_renta: 20000.00, capacidad_maxima: 80 },
+                { salon_id: 4, nombre: 'Centro de Convenciones Ágora', costo_renta: 100000.00, capacidad_maxima: 1000 }
+            ],
+            platillos: [
+                { platillo_id: 1, nombre: 'Crema de Champiñones', precio_por_persona: 80.00, tipo: 'entrada' },
+                { platillo_id: 2, nombre: 'Filete Mignon', precio_por_persona: 250.00, tipo: 'plato_fuerte' },
+                { platillo_id: 3, nombre: 'Salmón a la Naranja', precio_por_persona: 220.00, tipo: 'plato_fuerte' },
+                { platillo_id: 4, nombre: 'Ensalada César', precio_por_persona: 90.00, tipo: 'entrada' },
+                { platillo_id: 5, nombre: 'Tiramisú', precio_por_persona: 110.00, tipo: 'postre' },
+                { platillo_id: 6, nombre: 'Ensalada Caprese (Veg)', precio_por_persona: 100.00, tipo: 'vegetariano' },
+                { platillo_id: 7, nombre: 'Agua de Jamaica', precio_por_persona: 30.00, tipo: 'bebida' },
+                { platillo_id: 8, nombre: 'Pechuga a la Plancha (Baja en cal)', precio_por_persona: 150.00, tipo: 'bajo_en_calorias' }
+            ],
+            ingredientes: [
+                { ingrediente_id: 1, nombre: 'Champiñón', unidad: 'kg' },
+                { ingrediente_id: 2, nombre: 'Crema Lyncott', unidad: 'litro' },
+                { ingrediente_id: 3, nombre: 'Filete de Res', unidad: 'kg' },
+                { ingrediente_id: 4, nombre: 'Vino Tinto', unidad: 'litro' },
+                { ingrediente_id: 5, nombre: 'Lomo de Salmón', unidad: 'kg' },
+                { ingrediente_id: 6, nombre: 'Naranja', unidad: 'kg' },
+                { ingrediente_id: 7, nombre: 'Pechuga de Pollo', unidad: 'kg' }
+            ],
+            recetas: [
+                { platillo_id: 1, ingrediente_id: 1, cantidad_por_porcion: 0.150, unidad_receta: 'kg' },
+                { platillo_id: 1, ingrediente_id: 2, cantidad_por_porcion: 0.050, unidad_receta: 'litro' },
+                { platillo_id: 2, ingrediente_id: 3, cantidad_por_porcion: 0.250, unidad_receta: 'kg' },
+                { platillo_id: 2, ingrediente_id: 4, cantidad_por_porcion: 0.080, unidad_receta: 'litro' },
+                { platillo_id: 3, ingrediente_id: 5, cantidad_por_porcion: 0.220, unidad_receta: 'kg' },
+                { platillo_id: 3, ingrediente_id: 6, cantidad_por_porcion: 0.100, unidad_receta: 'kg' },
+                { platillo_id: 8, ingrediente_id: 7, cantidad_por_porcion: 0.200, unidad_receta: 'kg' }
+            ],
+            proyectos: [
+                // Realizados
+                { proyecto_id: 1, cliente_id: 1, gerente_id: 2, salon_id: 1, nombre_evento: 'Boda Sanchez', fecha_evento: '2024-05-10T18:00:00', numero_invitados: 250, estatus: 'realizado' },
+                { proyecto_id: 2, cliente_id: 2, gerente_id: 3, salon_id: 2, nombre_evento: 'XV Años Brenda', fecha_evento: '2024-06-15T14:00:00', numero_invitados: 100, estatus: 'realizado' },
+                { proyecto_id: 3, cliente_id: 3, gerente_id: 2, salon_id: 4, nombre_evento: 'Convención XYZ', fecha_evento: '2024-02-20T09:00:00', numero_invitados: 800, estatus: 'realizado' },
+                { proyecto_id: 4, cliente_id: 1, gerente_id: 3, salon_id: 3, nombre_evento: 'Bautizo', fecha_evento: '2024-07-01T13:00:00', numero_invitados: 50, estatus: 'realizado' },
+                { proyecto_id: 5, cliente_id: 4, gerente_id: 2, salon_id: 2, nombre_evento: 'Aniversario Perez', fecha_evento: '2024-08-30T19:00:00', numero_invitados: 120, estatus: 'realizado' },
+                { proyecto_id: 6, cliente_id: 5, gerente_id: 3, salon_id: 1, nombre_evento: 'Graduación ITESM', fecha_evento: '2024-06-22T20:00:00', numero_invitados: 300, estatus: 'realizado' },
+                { proyecto_id: 7, cliente_id: 3, gerente_id: 2, salon_id: 3, nombre_evento: 'Reunión Directiva', fecha_evento: '2024-09-10T10:00:00', numero_invitados: 30, estatus: 'realizado' },
+                { proyecto_id: 8, cliente_id: 2, gerente_id: 3, salon_id: 2, nombre_evento: 'Cumpleaños', fecha_evento: '2024-10-05T16:00:00', numero_invitados: 70, estatus: 'realizado' },
+                { proyecto_id: 9, cliente_id: 1, gerente_id: 2, salon_id: 1, nombre_evento: 'Boda de Oro', fecha_evento: '2023-12-10T18:00:00', numero_invitados: 200, estatus: 'realizado' },
+                { proyecto_id: 10, cliente_id: 4, gerente_id: 3, salon_id: 4, nombre_evento: 'Congreso Médico', fecha_evento: '2023-11-15T09:00:00', numero_invitados: 500, estatus: 'realizado' },
+                // Activos
+                { proyecto_id: 11, cliente_id: 1, gerente_id: 2, salon_id: 2, nombre_evento: 'Boda Civil', fecha_evento: '2025-12-12T18:00:00', numero_invitados: 100, estatus: 'confirmado' },
+                { proyecto_id: 12, cliente_id: 3, gerente_id: 3, salon_id: 3, nombre_evento: 'Cena de Fin de Año XYZ', fecha_evento: '2025-11-19T20:00:00', numero_invitados: 75, estatus: 'confirmado' },
+                { proyecto_id: 13, cliente_id: 3, gerente_id: 1, salon_id: 4, nombre_evento: 'Expo-Tech 2026', fecha_evento: '2026-02-20T09:00:00', numero_invitados: 900, estatus: 'confirmado' },
+                { proyecto_id: 14, cliente_id: 2, gerente_id: 2, salon_id: 1, nombre_evento: 'Boda Gómez', fecha_evento: '2026-01-10T19:00:00', numero_invitados: 280, estatus: 'confirmado' },
+                { proyecto_id: 15, cliente_id: 4, gerente_id: 3, salon_id: 2, nombre_evento: 'Aniversario Bodas de Plata', fecha_evento: '2025-11-28T20:00:00', numero_invitados: 130, estatus: 'confirmado' },
+                { proyecto_id: 16, cliente_id: 5, gerente_id: 2, salon_id: 1, nombre_evento: 'Graduación UAG', fecha_evento: '2025-12-15T20:00:00', numero_invitados: 250, estatus: 'confirmado' },
+                { proyecto_id: 17, cliente_id: 1, gerente_id: 3, salon_id: 3, nombre_evento: 'Posada Amigos', fecha_evento: '2025-12-18T21:00:00', numero_invitados: 60, estatus: 'confirmado' },
+                { proyecto_id: 18, cliente_id: 3, gerente_id: 2, salon_id: 3, nombre_evento: 'Junta Planeación 2026', fecha_evento: '2026-01-30T10:00:00', numero_invitados: 40, estatus: 'confirmado' },
+                { proyecto_id: 19, cliente_id: 2, gerente_id: 3, salon_id: 2, nombre_evento: 'Bautizo Mora', fecha_evento: '2025-11-22T14:00:00', numero_invitados: 140, estatus: 'confirmado' },
+                { proyecto_id: 20, cliente_id: 5, gerente_id: 2, salon_id: 1, nombre_evento: 'Comida Familiar López', fecha_evento: '2025-12-20T15:00:00', numero_invitados: 180, estatus: 'confirmado' }
+            ],
+            proyectoPlatillos: [
+                { proyecto_id: 1, platillo_id: 1 }, { proyecto_id: 1, platillo_id: 2 }, { proyecto_id: 1, platillo_id: 5 }, { proyecto_id: 1, platillo_id: 7 },
+                { proyecto_id: 2, platillo_id: 4 }, { proyecto_id: 2, platillo_id: 3 }, { proyecto_id: 2, platillo_id: 5 },
+                { proyecto_id: 3, platillo_id: 8 }, { proyecto_id: 3, platillo_id: 6 }, { proyecto_id: 3, platillo_id: 7 },
+                { proyecto_id: 11, platillo_id: 6 }, { proyecto_id: 11, platillo_id: 3 }, { proyecto_id: 11, platillo_id: 5 },
+                { proyecto_id: 12, platillo_id: 1 }, { proyecto_id: 12, platillo_id: 2 },
+                { proyecto_id: 13, platillo_id: 8 }, { proyecto_id: 13, platillo_id: 7 },
+                { proyecto_id: 14, platillo_id: 4 }, { proyecto_id: 14, platillo_id: 2 }, { proyecto_id: 14, platillo_id: 3 },
+                { proyecto_id: 15, platillo_id: 1 }, { proyecto_id: 15, platillo_id: 2 },
+                { proyecto_id: 16, platillo_id: 4 }, { proyecto_id: 16, platillo_id: 3 },
+                { proyecto_id: 17, platillo_id: 6 }, { proyecto_id: 17, platillo_id: 5 }, { proyecto_id: 17, platillo_id: 7 },
+                { proyecto_id: 18, platillo_id: 8 }, { proyecto_id: 18, platillo_id: 7 },
+                { proyecto_id: 19, platillo_id: 1 }, { proyecto_id: 19, platillo_id: 3 },
+                { proyecto_id: 20, platillo_id: 4 }, { proyecto_id: 20, platillo_id: 2 }, { proyecto_id: 20, platillo_id: 8 }
+            ]
+        };
+
+        // -----------------------------------------------------------------
+        // ESTADO DE LA APLICACIÓN
+        // -----------------------------------------------------------------
+        
+        // Simular la fecha actual para que la lógica de negocio (Req. 4) funcione.
+        // HOY ES: 17 de Noviembre de 2025
+        const MOCK_CURRENT_DATE = new Date('2025-11-17T18:00:00');
+
+        let currentUser = null; // { usuario_id, email, tipo_usuario, nombre }
+        let currentStep = 1;
+        const totalSteps = 2;
+        
+        // -----------------------------------------------------------------
+        // FUNCIONES DE UTILIDAD
+        // -----------------------------------------------------------------
+        
+        // Formateador de moneda
+        const formatter = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+        });
+
+        // Formateador de fecha
+        const dateFormatter = new Intl.DateTimeFormat('es-MX', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric'
+        });
+
+        /**
+         * Calcula los días restantes entre hoy (MOCK_CURRENT_DATE) y la fecha del evento.
+         * Devuelve un número.
+         */
+        function getDaysRemaining(eventDateStr) {
+            const eventDate = new Date(eventDateStr);
+            const diffTime = eventDate.getTime() - MOCK_CURRENT_DATE.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        /**
+         * Muestra u oculta las vistas de la página
+         */
+        function showPage(viewId) {
+            // Ocultar todas las vistas
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.style.display = 'none';
+            });
+            
+            // Mostrar la vista solicitada
+            const activeView = document.getElementById(viewId);
+            if (activeView) {
+                activeView.style.display = 'block';
+            }
+
+            // Actualizar elementos de la UI
+            const navPublic = document.getElementById('nav-public');
+            const btnLogin = document.getElementById('btn-login-nav');
+            const btnLogout = document.getElementById('btn-logout-nav');
+            const userGreeting = document.getElementById('user-greeting');
+            const pageTitle = document.getElementById('page-title');
+
+            if (currentUser) {
+                // Usuario logueado
+                navPublic.classList.add('hidden');
+                btnLogin.classList.add('hidden');
+                btnLogout.classList.remove('hidden');
+                userGreeting.classList.remove('hidden');
+                userGreeting.textContent = `Hola, ${currentUser.nombre}`;
+            } else {
+                // Usuario no logueado
+                navPublic.classList.remove('hidden');
+                btnLogin.classList.remove('hidden');
+                btnLogout.classList.add('hidden');
+                userGreeting.classList.add('hidden');
+                userGreeting.textContent = '';
+            }
+
+            // Actualizar título de la página
+            switch (viewId) {
+                case 'view-public':
+                    pageTitle.textContent = 'Bienvenido a Catherine\'s Catering';
+                    break;
+                case 'view-login':
+                    pageTitle.textContent = 'Iniciar Sesión';
+                    break;
+                case 'view-client-dashboard':
+                    pageTitle.textContent = 'Panel de Cliente';
+                    break;
+                case 'view-manager-dashboard':
+                    pageTitle.textContent = 'Panel de Administración';
+                    break;
+            }
+        }
+
+        /**
+         * Muestra el modal de notificación
+         */
+        function showNotification(title, message) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            const modal = document.getElementById('modal-notification');
+            modal.classList.remove('hidden');
+            // Retraso corto para permitir que el 'hidden' se quite antes de la transición
+            setTimeout(() => {
+                modal.classList.add('is-visible', 'opacity-100');
+            }, 10);
+        }
+
+        /**
+         * Oculta el modal de notificación
+         */
+        function hideNotification() {
+            const modal = document.getElementById('modal-notification');
+            modal.classList.remove('is-visible', 'opacity-100');
+            // Esperar a que termine la transición (0.2s) antes de ocultarlo
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200); 
+        }
+
+        // -----------------------------------------------------------------
+        // LÓGICA DE RENDERIZADO
+        // -----------------------------------------------------------------
+        
+        /**
+         * Carga los platillos y salones en la página pública
+         */
+        function renderPublicData() {
+            const platillosList = document.getElementById('platillos-list');
+            platillosList.innerHTML = '';
+            db.platillos.forEach(p => {
+                platillosList.innerHTML += `
+                    <div class="bg-white rounded-lg shadow overflow-hidden interactive-card">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900">${p.nombre}</h3>
+                            <p class="text-sm text-gray-600 capitalize">${p.tipo.replace('_', ' ')}</p>
+                            <p class="mt-4 text-xl font-bold text-indigo-600">${formatter.format(p.precio_por_persona)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const salonesList = document.getElementById('salones-list');
+            salonesList.innerHTML = '';
+            db.salones.forEach(s => {
+                salonesList.innerHTML += `
+                    <div class="bg-white rounded-lg shadow overflow-hidden interactive-card">
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900">${s.nombre}</h3>
+                            <p class="text-sm text-gray-600">Capacidad: ${s.capacidad_maxima} personas</p>
+                            <p class="mt-4 text-xl font-bold text-indigo-600">${formatter.format(s.costo_renta)}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        /**
+         * Carga el dashboard del cliente (Req 4)
+         */
+        function renderClientDashboard() {
+            const client = db.clientes.find(c => c.usuario_id === currentUser.usuario_id);
+            if (!client) return;
+            
+            const projects = db.proyectos.filter(p => p.cliente_id === client.cliente_id && p.estatus === 'confirmado');
+            const listContainer = document.getElementById('client-projects-list');
+            listContainer.innerHTML = '';
+
+            if (projects.length === 0) {
+                listContainer.innerHTML = `<p class="text-gray-600">No tiene proyectos activos.</p>`;
+                return;
+            }
+
+            projects.forEach(p => {
+                const salon = db.salones.find(s => s.salon_id === p.salon_id);
+                const daysRemaining = getDaysRemaining(p.fecha_evento);
+                const canEdit = daysRemaining >= 5;
+
+                const editHtml = `
+                    <div class="mt-4 flex items-center space-x-2">
+                        <label for="invitados-${p.proyecto_id}" class="text-sm font-medium text-gray-700">Actualizar invitados:</label>
+                        <input type="number" id="invitados-${p.proyecto_id}" value="${p.numero_invitados}" ${!canEdit ? 'disabled' : ''} 
+                               class="block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${!canEdit ? 'bg-gray-100' : ''}">
+                        <button data-project-id="${p.proyecto_id}" data-salon-cap="${salon.capacidad_maxima}" ${!canEdit ? 'disabled' : ''} 
+                                class="btn btn-update-guests py-1 px-3 rounded-md text-sm font-medium text-white ${canEdit ? 'bg-indigo-600 hover:bg-indigo-700 hover:-translate-y-0.5' : 'bg-gray-400 cursor-not-allowed'}">
+                            Actualizar
+                        </button>
+                    </div>
+                `;
+
+                const restrictionHtml = `
+                    <p class="mt-4 text-sm text-red-600"><i class="fa-solid fa-lock mr-1"></i> No se puede modificar el número de invitados. Faltan ${daysRemaining} días para el evento.</p>
+                `;
+
+                listContainer.innerHTML += `
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="md:flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-900">${p.nombre_evento}</h3>
+                                <p class="text-gray-600"><i class="fa-solid fa-calendar-alt fa-fw mr-1"></i> ${dateFormatter.format(new Date(p.fecha_evento))}</p>
+                                <p class="text-gray-600"><i class="fa-solid fa-location-dot fa-fw mr-1"></i> ${salon.nombre} (Cap. ${salon.capacidad_maxima})</p>
+                                <p class="text-gray-600"><i class="fa-solid fa-users fa-fw mr-1"></i> ${p.numero_invitados} invitados</p>
+                            </div>
+                            <div class="mt-4 md:mt-0 md:text-right">
+                                <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-0.5 text-sm font-medium text-green-800">
+                                    ${p.estatus.toUpperCase()}
+                                </span>
+                                <p class="text-sm text-gray-500 mt-2">${daysRemaining} días restantes</p>
+                            </div>
+                        </div>
+                        ${canEdit ? editHtml : restrictionHtml}
+                    </div>
+                `;
+            });
+        }
+
+        /**
+         * Carga el dashboard del gerente (Todas las pestañas)
+         */
+        function renderManagerDashboard() {
+            // Mostrar/Ocultar pestaña de Admin Gerentes (Req 3)
+            const adminTab = document.getElementById('tab-admin-gerentes');
+            if (currentUser.tipo_usuario === 'admin_gerente') {
+                adminTab.classList.remove('hidden');
+            } else {
+                adminTab.classList.add('hidden');
+            }
+
+            // Renderizar las sub-pestañas
+            renderManagerProjects();
+            renderManagerReports();
+            renderManagerAdmin();
+        }
+
+        /**
+         * Carga la tabla de Proyectos del Gerente
+         */
+        function renderManagerProjects() {
+            const tableBody = document.getElementById('manager-projects-table');
+            tableBody.innerHTML = '';
+            // Ordenar por fecha
+            const projects = db.proyectos.sort((a, b) => new Date(a.fecha_evento) - new Date(b.fecha_evento));
+
+            projects.forEach(p => {
+                const client = db.clientes.find(c => c.cliente_id === p.cliente_id);
+                const user = db.usuarios.find(u => u.usuario_id === client.usuario_id);
+                let estatusClass = '';
+                switch(p.estatus) {
+                    case 'confirmado': estatusClass = 'bg-green-100 text-green-800'; break;
+                    case 'realizado': estatusClass = 'bg-blue-100 text-blue-800'; break;
+                    case 'cancelado': estatusClass = 'bg-red-100 text-red-800'; break;
+                }
+                
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${p.nombre_evento}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.nombre} ${user.apellido}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dateFormatter.format(new Date(p.fecha_evento))}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${p.numero_invitados}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${estatusClass}">
+                                ${p.estatus.toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            ${p.estatus === 'confirmado' ? `<button data-project-id="${p.proyecto_id}" class="btn-cancel-project text-red-600 hover:text-red-900">Cancelar</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        /**
+         * Carga la tabla de Administración de Gerentes
+         */
+        function renderManagerAdmin() {
+            const tableBody = document.getElementById('manager-admin-table');
+            tableBody.innerHTML = '';
+            
+            // Excluir al propio admin (Catherine) de la lista de editables
+            const gerentes = db.gerentes.filter(g => g.usuario_id !== currentUser.usuario_id);
+
+            gerentes.forEach(g => {
+                const user = db.usuarios.find(u => u.usuario_id === g.usuario_id);
+                tableBody.innerHTML += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.nombre} ${user.apellido}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.email}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">${g.estatus}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            <select data-gerente-id="${g.gerente_id}" class="select-estatus-gerente block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option value="activo" ${g.estatus === 'activo' ? 'selected' : ''}>Activo</option>
+                                <option value="vacaciones" ${g.estatus === 'vacaciones' ? 'selected' : ''}>Vacaciones</option>
+                                <option value="inactivo" ${g.estatus === 'inactivo' ? 'selected' : ''}>Inactivo</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+        
+        /**
+         * Prepara los botones de los reportes
+         */
+        function renderManagerReports() {
+            // Req 4: Reporte de Ingredientes
+            document.getElementById('btn-report-ing').addEventListener('click', () => {
+                const start = new Date(document.getElementById('report-ing-start').value + 'T00:00:00');
+                const end = new Date(document.getElementById('report-ing-end').value + 'T23:59:59');
+                const container = document.getElementById('report-ing-result');
+                
+                const projectsInDate = db.proyectos.filter(p => {
+                    const pDate = new Date(p.fecha_evento);
+                    return p.estatus === 'confirmado' && pDate >= start && pDate <= end;
+                });
+
+                if (projectsInDate.length === 0) {
+                    container.innerHTML = `<p class="text-gray-600">No hay eventos confirmados en ese rango de fechas.</p>`;
+                    container.classList.remove('hidden');
+                    return;
+                }
+
+                const ingredientNeeds = {}; // { ingrediente_id: { nombre, unidad, total } }
+
+                projectsInDate.forEach(p => {
+                    const platillosForProject = db.proyectoPlatillos.filter(pp => pp.proyecto_id === p.proyecto_id);
+                    
+                    platillosForProject.forEach(pp => {
+                        const recetas = db.recetas.filter(r => r.platillo_id === pp.platillo_id);
+                        
+                        recetas.forEach(r => {
+                            const ingrediente = db.ingredientes.find(i => i.ingrediente_id === r.ingrediente_id);
+                            const totalAmount = p.numero_invitados * r.cantidad_por_porcion;
+
+                            if (!ingredientNeeds[r.ingrediente_id]) {
+                                ingredientNeeds[r.ingrediente_id] = {
+                                    nombre: ingrediente.nombre,
+                                    unidad: r.unidad_receta,
+                                    total: 0
+                                };
+                            }
+                            ingredientNeeds[r.ingrediente_id].total += totalAmount;
+                        });
+                    });
+                });
+
+                let table = `
+                    <table class="min-w-full divide-y divide-gray-200 mt-4">
+                        <thead class="bg-gray-50"><tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Ingrediente</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Total Necesario</th>
+                        </tr></thead><tbody>
+                `;
+                for (const id in ingredientNeeds) {
+                    const item = ingredientNeeds[id];
+                    table += `
+                        <tr>
+                            <td class="px-4 py-2 text-sm text-gray-900">${item.nombre}</td>
+                            <td class="px-4 py-2 text-sm text-gray-500">${item.total.toFixed(2)} ${item.unidad}</td>
+                        </tr>
+                    `;
+                }
+                table += `</tbody></table>`;
+                container.innerHTML = table;
+                container.classList.remove('hidden');
+            });
+
+            // Req 5: Reporte de Cobranza (No Finiquitados)
+            document.getElementById('btn-report-cobranza').addEventListener('click', () => {
+                const limitDate = new Date(MOCK_CURRENT_DATE.getTime());
+                limitDate.setDate(limitDate.getDate() + 21); // 3 semanas desde hoy
+                const container = document.getElementById('report-cobranza-result');
+
+                const projectsToCall = db.proyectos.filter(p => {
+                    const pDate = new Date(p.fecha_evento);
+                    return p.estatus === 'confirmado' &&
+                           pDate >= MOCK_CURRENT_DATE &&
+                           pDate <= limitDate;
+                });
+                
+                if (projectsToCall.length === 0) {
+                    container.innerHTML = `<p class="text-gray-600">No hay eventos próximos por finiquitar.</p>`;
+                    container.classList.remove('hidden');
+                    return;
+                }
+
+                let table = `
+                    <table class="min-w-full divide-y divide-gray-200 mt-4">
+                        <thead class="bg-gray-50"><tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Evento</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Fecha Evento</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Días Faltantes</th>
+                        </tr></thead><tbody>
+                `;
+                projectsToCall.forEach(p => {
+                    const client = db.clientes.find(c => c.cliente_id === p.cliente_id);
+                    const user = db.usuarios.find(u => u.usuario_id === client.usuario_id);
+                    const daysRemaining = getDaysRemaining(p.fecha_evento);
+                    table += `
+                        <tr>
+                            <td class="px-4 py-2 text-sm text-gray-900">${p.nombre_evento}</td>
+                            <td class="px-4 py-2 text-sm text-gray-500">${user.nombre} (${user.email})</td>
+                            <td class="px-4 py-2 text-sm text-gray-500">${dateFormatter.format(new Date(p.fecha_evento))}</td>
+                            <td class="px-4 py-2 text-sm text-red-600 font-medium">${daysRemaining}</td>
+                        </tr>
+                    `;
+                });
+                table += `</tbody></table>`;
+                container.innerHTML = table;
+                container.classList.remove('hidden');
+            });
+            
+            // Req 7: Reporte de Popularidad
+            document.getElementById('btn-report-pop').addEventListener('click', () => {
+                const container = document.getElementById('report-pop-result');
+                const counts = {};
+                
+                db.proyectoPlatillos.forEach(pp => {
+                    const project = db.proyectos.find(p => p.proyecto_id === pp.proyecto_id);
+                    if (project.estatus === 'confirmado' || project.estatus === 'realizado') {
+                        counts[pp.platillo_id] = (counts[pp.platillo_id] || 0) + 1;
+                    }
+                });
+
+                const sortedPlatillos = Object.keys(counts).map(platillo_id => {
+                    const platillo = db.platillos.find(p => p.platillo_id == platillo_id);
+                    return {
+                        nombre: platillo.nombre,
+                        tipo: platillo.tipo,
+                        count: counts[platillo_id]
+                    };
+                }).sort((a, b) => b.count - a.count);
+
+                let table = `
+                    <table class="min-w-full divide-y divide-gray-200 mt-4">
+                        <thead class="bg-gray-50"><tr>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Platillo</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tipo</th>
+                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Veces Pedido</th>
+                        </tr></thead><tbody>
+                `;
+                sortedPlatillos.forEach(p => {
+                    table += `
+                        <tr>
+                            <td class="px-4 py-2 text-sm text-gray-900">${p.nombre}</td>
+                            <td class="px-4 py-2 text-sm text-gray-500 capitalize">${p.tipo.replace('_', ' ')}</td>
+                            <td class="px-4 py-2 text-sm text-gray-500 font-medium">${p.count}</td>
+                        </tr>
+                    `;
+                });
+                table += `</tbody></table>`;
+                container.innerHTML = table;
+                container.classList.remove('hidden');
+            });
+        }
+
+
+        // -----------------------------------------------------------------
+        // MANEJADORES DE EVENTOS
+        // -----------------------------------------------------------------
+        
+        // Carga inicial
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPublicData();
+            showPage('view-public');
+
+            // --- Navegación ---
+            document.getElementById('btn-login-nav').addEventListener('click', () => showPage('view-login'));
+            document.getElementById('btn-logout-nav').addEventListener('click', handleLogout);
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelector(e.target.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // --- Formularios ---
+            document.getElementById('form-login').addEventListener('submit', handleLogin);
+            document.getElementById('form-solicitud').addEventListener('submit', handleSolicitud);
+            document.getElementById('form-nuevo-platillo').addEventListener('submit', handleNuevoPlatillo);
+
+            // --- Modales ---
+            document.getElementById('modal-close').addEventListener('click', hideNotification);
+            document.getElementById('modal-ok').addEventListener('click', hideNotification);
+
+            // --- Formulario de Cotización (Pasos) ---
+            document.getElementById('btn-form-next').addEventListener('click', handleNextStep);
+            document.getElementById('btn-form-prev').addEventListener('click', handlePrevStep);
+
+            // --- Dashboard Cliente (Event Bubbling) ---
+            document.getElementById('client-projects-list').addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-update-guests')) {
+                    handleUpdateGuests(e.target);
+                }
+            });
+            
+            // --- Dashboard Gerente (Tabs) ---
+            document.querySelectorAll('.manager-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    // Ocultar todos los contenidos
+                    document.querySelectorAll('.manager-tab-content').forEach(content => content.style.display = 'none');
+                    // Quitar clase activa a todas las pestañas
+                    document.querySelectorAll('.manager-tab').forEach(t => t.classList.remove('tab-active', 'border-indigo-600', 'text-indigo-600'));
+                    document.querySelectorAll('.manager-tab').forEach(t => t.classList.add('border-transparent', 'text-gray-500'));
+                    
+                    // Activar pestaña y contenido clickeado
+                    const tabId = e.currentTarget.dataset.tab;
+                    document.getElementById(tabId).style.display = 'block';
+                    e.currentTarget.classList.add('tab-active', 'border-indigo-600', 'text-indigo-600');
+                    e.currentTarget.classList.remove('border-transparent', 'text-gray-500');
+                });
+            });
+
+            // --- Dashboard Gerente (Event Bubbling) ---
+            document.getElementById('manager-admin-table').addEventListener('change', (e) => {
+                if (e.target.classList.contains('select-estatus-gerente')) {
+                    handleUpdateGerenteStatus(e.target);
+                }
+            });
+            document.getElementById('manager-projects-table').addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-cancel-project')) {
+                    handleCancelProject(e.target);
+                }
+            });
+
+        });
+
+        // -----------------------------------------------------------------
+        // LÓGICA DE NEGOCIO (Acciones)
+        // -----------------------------------------------------------------
+
+        /**
+         * Maneja el inicio de sesión
+         */
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            const user = db.usuarios.find(u => u.email === email && u.password_hash === pass);
+            
+            if (user) {
+                currentUser = user;
+                errorDiv.classList.add('hidden');
+                
+                if (user.tipo_usuario === 'cliente') {
+                    renderClientDashboard();
+                    showPage('view-client-dashboard');
+                } else if (user.tipo_usuario === 'gerente' || user.tipo_usuario === 'admin_gerente') {
+                    renderManagerDashboard();
+                    showPage('view-manager-dashboard');
+                }
+            } else {
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Maneja el cierre de sesión
+         */
+        function handleLogout() {
+            currentUser = null;
+            showPage('view-public');
+        }
+
+        /**
+         * Maneja el envío de una solicitud (Simulado)
+         */
+        function handleSolicitud(e) {
+            e.preventDefault();
+            // Aquí iría la lógica para enviar la solicitud (p.ej. addDoc a Firestore)
+            showNotification('Solicitud Enviada', 'Gracias por contactarnos. Un gerente de eventos se comunicará con usted a la brevedad.');
+            e.target.reset();
+            // Resetear el formulario al paso 1
+            currentStep = 1;
+            updateFormSteps();
+        }
+
+        /**
+         * Maneja el paso siguiente en el formulario de cotización
+         */
+        function handleNextStep() {
+            if (currentStep === 1) {
+                // Validar Paso 1
+                if (!validateStep1()) return;
+            }
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateFormSteps();
+            }
+        }
+
+        /**
+         * Maneja el paso anterior en el formulario de cotización
+         */
+        function handlePrevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateFormSteps();
+            }
+        }
+
+        /**
+         * Valida los campos del Paso 1 (Contacto)
+         */
+        function validateStep1() {
+            let isValid = true;
+            const nombreInput = document.getElementById('solicitud-nombre');
+            const emailInput = document.getElementById('solicitud-email');
+            const errorNombre = document.getElementById('error-nombre');
+            const errorEmail = document.getElementById('error-email');
+
+            // Resetear errores
+            errorNombre.classList.add('hidden');
+            errorEmail.classList.add('hidden');
+            nombreInput.classList.remove('border-red-500');
+            emailInput.classList.remove('border-red-500');
+            
+            // Validar Nombre
+            if (nombreInput.value.trim() === '') {
+                errorNombre.classList.remove('hidden');
+                nombreInput.classList.add('border-red-500');
+                isValid = false;
+            }
+
+            // Validar Email (simple)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailInput.value.trim() === '' || !emailRegex.test(emailInput.value)) {
+                errorEmail.classList.remove('hidden');
+                emailInput.classList.add('border-red-500');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        /**
+         * Muestra/Oculta los pasos y botones del formulario de cotización
+         */
+        function updateFormSteps() {
+            // Ocultar todos los pasos
+            document.querySelectorAll('.form-step').forEach(step => step.style.display = 'none');
+            // Mostrar paso actual
+            document.getElementById(`form-step-${currentStep}`).style.display = 'block';
+
+            const btnPrev = document.getElementById('btn-form-prev');
+            const btnNext = document.getElementById('btn-form-next');
+            const btnSubmit = document.getElementById('btn-form-submit');
+            
+            const step1Indicator = document.getElementById('step-1-indicator');
+            const step2Indicator = document.getElementById('step-2-indicator');
+            
+            // Actualizar botones
+            if (currentStep === 1) {
+                btnPrev.disabled = true;
+                btnNext.classList.remove('hidden');
+                btnSubmit.classList.add('hidden');
+            } else if (currentStep === totalSteps) {
+                btnPrev.disabled = false;
+                btnNext.classList.add('hidden');
+                btnSubmit.classList.remove('hidden');
+            }
+
+            // Actualizar indicador de pasos
+            if (currentStep === 1) {
+                step1Indicator.classList.add('is-active', 'opacity-100');
+                step1Indicator.querySelector('.step-circle').classList.add('bg-indigo-600', 'text-white');
+                step1Indicator.querySelector('.step-circle').classList.remove('bg-gray-200', 'text-gray-500');
+                step1Indicator.querySelector('span').classList.add('text-indigo-600');
+                step1Indicator.querySelector('span').classList.remove('text-gray-500');
+                
+                step2Indicator.classList.remove('is-active', 'opacity-100');
+                step2Indicator.classList.add('opacity-50');
+                step2Indicator.querySelector('.step-circle').classList.remove('bg-indigo-600', 'text-white');
+                step2Indicator.querySelector('.step-circle').classList.add('bg-gray-200', 'text-gray-500');
+                step2Indicator.querySelector('span').classList.remove('text-indigo-600');
+                step2Indicator.querySelector('span').classList.add('text-gray-500');
+            } else if (currentStep === 2) {
+                step1Indicator.classList.remove('is-active', 'opacity-100');
+                step1Indicator.classList.add('opacity-50');
+                // Dejar el paso 1 como "completado" (azul)
+                step1Indicator.querySelector('.step-circle').classList.add('bg-indigo-600', 'text-white');
+                step1Indicator.querySelector('span').classList.add('text-indigo-600');
+                
+                step2Indicator.classList.add('is-active', 'opacity-100');
+                step2Indicator.classList.remove('opacity-50');
+                step2Indicator.querySelector('.step-circle').classList.add('bg-indigo-600', 'text-white');
+                step2Indicator.querySelector('.step-circle').classList.remove('bg-gray-200', 'text-gray-500');
+                step2Indicator.querySelector('span').classList.add('text-indigo-600');
+                step2Indicator.querySelector('span').classList.remove('text-gray-500');
+            }
+        }
+
+        /**
+         * Maneja la actualización de invitados (Cliente) (Req 4 y 6)
+         */
+        function handleUpdateGuests(button) {
+            const projectId = button.dataset.projectId;
+            const salonCap = parseInt(button.dataset.salonCap, 10);
+            const input = document.getElementById(`invitados-${projectId}`);
+            const newGuestCount = parseInt(input.value, 10);
+
+            // Req 6: Validación de capacidad
+            if (newGuestCount > salonCap) {
+                showNotification('Error de Capacidad', `El número de invitados (${newGuestCount}) excede la capacidad máxima del salón (${salonCap}). Por favor, elija un número menor o contacte a su gerente para cambiar de salón.`);
+                // Revertir al valor original (simulado)
+                const project = db.proyectos.find(p => p.proyecto_id == projectId);
+                input.value = project.numero_invitados;
+                return;
+            }
+
+            // (Simulación de actualización)
+            const project = db.proyectos.find(p => p.proyecto_id == projectId);
+            project.numero_invitados = newGuestCount;
+            
+            showNotification('Actualización Exitosa', `El número de invitados para "${project.nombre_evento}" se ha actualizado a ${newGuestCount}.`);
+            
+            // Re-renderizar para actualizar la UI (especialmente la de gerente)
+            renderClientDashboard();
+            renderManagerProjects();
+        }
+        
+        /**
+         * Maneja la creación de un nuevo platillo (Gerente) (Req 3) (Simulado)
+         */
+        function handleNuevoPlatillo(e) {
+            e.preventDefault();
+            const nuevoPlatillo = {
+                platillo_id: db.platillos.length + 100, // ID temporal
+                nombre: document.getElementById('dish-nombre').value,
+                precio_por_persona: parseFloat(document.getElementById('dish-precio').value),
+                tipo: document.getElementById('dish-tipo').value,
+                descripcion: document.getElementById('dish-desc').value,
+                // instrucciones, etc.
+            };
+            
+            // Simulación de guardado
+            db.platillos.push(nuevoPlatillo);
+            
+            showNotification('Platillo Creado', `El platillo "${nuevoPlatillo.nombre}" ha sido agregado al catálogo.`);
+            e.target.reset();
+            
+            // Re-renderizar la lista pública
+            renderPublicData();
+        }
+        
+        /**
+         * Maneja el cambio de estatus de un gerente (Admin) (Req 3) (Simulado)
+         */
+        function handleUpdateGerenteStatus(select) {
+            const gerenteId = select.dataset.gerenteId;
+            const newStatus = select.value;
+            
+            // Simulación de actualización
+            const gerente = db.gerentes.find(g => g.gerente_id == gerenteId);
+            gerente.estatus = newStatus;
+            
+            const user = db.usuarios.find(u => u.usuario_id === gerente.usuario_id);
+            
+            showNotification('Estatus Actualizado', `El estatus de ${user.nombre} ahora es ${newStatus.toUpperCase()}.`);
+            // Re-renderizar la tabla de admin
+            renderManagerAdmin();
+        }
+
+        /**
+         * Maneja la cancelación de un proyecto (Gerente) (Req 3) (Simulado)
+         */
+        function handleCancelProject(button) {
+            const projectId = button.dataset.projectId;
+            
+            // Simulación de actualización
+            const project = db.proyectos.find(p => p.proyecto_id == projectId);
+            project.estatus = 'cancelado';
+            
+            showNotification('Proyecto Cancelado', `El proyecto "${project.nombre_evento}" ha sido cancelado.`);
+            
+            // Re-renderizar tablas
+            renderManagerProjects();
+            renderClientDashboard(); // Para que desaparezca del panel del cliente
+        }
+
+    </script>
+</body>
+</html>
